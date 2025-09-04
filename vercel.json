@@ -3,10 +3,26 @@
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/build",
   "framework": null,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "src": "^/$",
+      "status": 404
+    },
+    {
+      "src": "^/reconciliation-assistant/?$",
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/reconciliation-assistant/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "^/reconciliation-assistant/(.*)",
+      "dest": "/$1"
+    },
+    {
+      "src": "^/(?!reconciliation-assistant).*$",
+      "status": 404
     }
   ]
 }

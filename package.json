@@ -11,5 +11,6 @@
   },
   "keywords": ["tripleseat", "reconciliation", "ai", "react", "typescript"],
   "author": "Chris Merchant",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://demos.chrismerchant.work"
 }

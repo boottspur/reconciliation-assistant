@@ -1,0 +1,15 @@
+{
+  "name": "reconciliation-assistant",
+  "version": "1.0.0",
+  "description": "Tripleseat Reconciliation Assistant - AI-powered prototype for extracting event updates from discussion threads",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "dev": "npm run start",
+    "backend": "cd backend && npm run dev"
+  },
+  "keywords": ["tripleseat", "reconciliation", "ai", "react", "typescript"],
+  "author": "Chris Merchant",
+  "license": "MIT"
+}

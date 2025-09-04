@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRD: Reconciliation Assistant Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #1976d2;
+        }
+        
+        .header h1 {
+            color: #1976d2;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        h2 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin: 25px 0 10px 0;
+            font-weight: 600;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.1rem;
+            margin: 20px 0 8px 0;
+            font-weight: 600;
+        }
+        
+        p, li {
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .status-item .check {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .example {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #1976d2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .back-link {
+                position: static;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/reconciliation-assistant" class="back-link">← Back to Hub</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>PRD: Reconciliation Assistant Prototype</h1>
+            <p class="subtitle">AI-powered extraction of event updates from discussion threads</p>
+        </div>
+
+        <h2>Overview</h2>
+        <p>Event Managers (EMs) frequently negotiate event details with guests via Tripleseat's Discussions (email-synced threads). Critical details like guest count, menu selections, linen colors, and timing often remain buried in free-form text. EMs must manually copy these into structured event fields, creating risk of errors, contract drift, and operational confusion.</p>
+        
+        <p>This prototype introduces a Reconciliation Assistant inside Discussions. It scans messages, surfaces potential updates, and allows EMs to <strong>accept</strong>, <strong>discard</strong>, or <strong>add to tasks</strong>. The AI interactions are mocked/deterministic, but the workflow and UI demonstrate the full user experience.</p>
+
+        <h2>Goals</h2>
+        <ul>
+            <li>Reduce errors from missed updates in guest communication</li>
+            <li>Save EMs time by surfacing structured suggestions with confidence scores</li>
+            <li>Provide a workflow that can later support AI-powered parsing without architectural redesign</li>
+            <li>Demonstrate three-action workflow: Accept, Discard, Add to Tasks</li>
+        </ul>
+
+        <h2>Non-Goals</h2>
+        <ul>
+            <li>Real AI/NLP integration (mocked with regex parsing)</li>
+            <li>Full event schema coverage (focused on 4 key fields)</li>
+            <li>Contract regeneration flows (flagged only)</li>
+            <li>Production-ready scalability</li>
+        </ul>
+
+        <h2>Personas</h2>
+        <h3>Event Manager (Primary User)</h3>
+        <p>Wants to avoid clerical re-entry and reduce mistakes, but remain in control of all changes to event details.</p>
+        
+        <h3>Guest (Indirect)</h3>
+        <p>Continues using Discussions normally (email replies) without any workflow changes.</p>
+
+        <h2>Functional Scope</h2>
+        <h3>Supported Event Fields (Prototype)</h3>
+        <ul>
+            <li><strong>Guest count</strong> - Numeric extraction with addition support</li>
+            <li><strong>Event start time</strong> - Time format recognition</li>
+            <li><strong>Menu package</strong> - Buffet A/B/C, vegetarian options</li>
+            <li><strong>Linen color</strong> - Color name extraction</li>
+        </ul>
+
+        <h3>Three-Action Workflow</h3>
+        <ul>
+            <li><strong>Accept</strong> - Immediately applies suggestion to event record</li>
+            <li><strong>Discard</strong> - Removes suggestion permanently</li>
+            <li><strong>Add to Tasks</strong> - Creates follow-up task for later action</li>
+        </ul>
+
+        <h2>User Stories</h2>
+        <ul>
+            <li>As an EM, when a guest writes "we're up to 66 guests," I see a suggestion chip to update Guest Count → 66</li>
+            <li>As an EM, I can <strong>accept</strong> the suggestion and it updates the event record with before/after preview</li>
+            <li>As an EM, I can <strong>discard</strong> the suggestion to remove it permanently</li>
+            <li>As an EM, I can <strong>add to tasks</strong> to handle the change later through my task management system</li>
+            <li>As an EM, if I accept a suggestion that changes a financial anchor (guest count, menu), I see a "Contract Update Required" banner</li>
+        </ul>
+
+        <h2>Technical Implementation</h2>
+        <h3>Backend (Node.js + Express)</h3>
+        <ul>
+            <li>Message ingestion: Store discussions as message objects (id, author, timestamp, body, isGuest)</li>
+            <li>Reconciliation engine: Regex-based parser for supported fields</li>
+            <li>Returns suggestions array: {id, field, value, confidence, messageId, originalText}</li>
+            <li>Confidence scores: 0.85-0.95 based on pattern strength and context</li>
+            <li>In-memory event store with real-time updates</li>
+        </ul>
+
+        <h3>Frontend (React + TypeScript + Material-UI)</h3>
+        <ul>
+            <li>Discussion threads with message blocks</li>
+            <li>Suggestion chips with confidence indicators and three-action buttons</li>
+            <li>Event summary sidebar with before/after change tracking</li>
+            <li>Contract update banner for financial anchor changes</li>
+            <li>Demo mode with automated scenario walkthrough</li>
+        </ul>
+
+        <h2>Parsing Logic (Implemented)</h2>
+        <div class="code-block">
+Guest count: /(\d{1,3})\s*(more\s*)?(guests?|people|attendees|RSVP)/i
+Start time: /(\d{1,2}):?(\d{2})?\s*(am|pm)/i  
+Menu: /(buffet\s*[a-c]|vegetarian|plated)/i
+Linens: /(red|blue|green|white|black|purple|gold|silver)\s*(linens?|napkins?)/i
+        </div>
+
+        <h3>Example Output</h3>
+        <div class="example">
+            <strong>Input:</strong> "Actually, we just had 4 more RSVPs come in, so we're up to 66 guests now. Also, can we push dinner to 7:30 PM?"
+            <br><br>
+            <strong>Output:</strong>
+            <div class="code-block">
+[
+  {
+    "id": "sug-0",
+    "field": "guestCount", 
+    "value": 66,
+    "confidence": 0.9,
+    "messageId": "msg-002",
+    "originalText": "66 guests"
+  },
+  {
+    "id": "sug-1", 
+    "field": "timeline.start",
+    "value": "7:30 PM", 
+    "confidence": 0.9,
+    "messageId": "msg-002",
+    "originalText": "7:30"
+  }
+]
+            </div>
+        </div>
+
+        <h2>Demo Features</h2>
+        <ul>
+            <li><strong>Three Discussion Threads</strong> - Final Details, AV Requirements, Cake Delivery</li>
+            <li><strong>Johnson Wedding Reception</strong> - Complete mock event with realistic data</li>
+            <li><strong>Confidence Visualization</strong> - Color-coded confidence indicators</li>
+            <li><strong>Interactive Demo Mode</strong> - Automated workflow demonstration</li>
+            <li><strong>Real-time Updates</strong> - Event summary updates as suggestions are accepted</li>
+        </ul>
+
+        <h2>Success Metrics (Prototype Demo)</h2>
+        <ul>
+            <li>Suggestions appear instantly with messages</li>
+            <li>Clear visual feedback for Accept/Discard/Add to Tasks actions</li>
+            <li>UX validation: EMs feel in control and not overwhelmed</li>
+            <li>Contract update warnings trigger appropriately</li>
+            <li>Before/after value changes are clearly displayed</li>
+        </ul>
+
+        <h2>Implementation Status</h2>
+        <div class="status-grid">
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>Discussions UI with message blocks</span>
+            </div>
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>Regex parser returns suggestions</span>
+            </div>
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>Three-action suggestion chips</span>
+            </div>
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>Event summary sidebar updates</span>
+            </div>
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>Contract update banner triggers</span>
+            </div>
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>No external AI API dependencies</span>
+            </div>
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>Demo mode with automation</span>
+            </div>
+            <div class="status-item">
+                <span class="check">✅</span>
+                <span>Material-UI responsive design</span>
+            </div>
+        </div>
+
+        <h2>Future Extensions</h2>
+        <ul>
+            <li>Expand field coverage (AV equipment, décor, room setup)</li>
+            <li>True AI/NLP extraction with GPT-4 or Claude integration</li>
+            <li>Integration with contract regeneration workflow</li>
+            <li>Venue-specific dictionaries for custom items</li>
+            <li>Guest Portal "Request Change" → Discussion → reconciliation flow</li>
+            <li>Bulk suggestion management and approval workflows</li>
+            <li>Analytics dashboard for suggestion acceptance rates</li>
+        </ul>
+
+        <h2>Technology Stack</h2>
+        <ul>
+            <li><strong>Frontend:</strong> React 19, TypeScript, Material-UI, Axios</li>
+            <li><strong>Backend:</strong> Node.js, Express, TypeScript</li>
+            <li><strong>Deployment:</strong> Vercel with serverless functions</li>
+            <li><strong>Data Storage:</strong> In-memory (prototype), ready for database integration</li>
+        </ul>
+    </div>
+</body>
+</html>

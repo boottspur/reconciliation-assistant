@@ -29,6 +29,10 @@
       "dest": "/reconciliation-presentation.html"
     },
     {
+      "src": "^/reconciliation-assistant/prd/?$",
+      "dest": "/prd.html"
+    },
+    {
       "src": "^/(?!reconciliation-assistant|reconciliation-presentation).*$",
       "status": 404
     }

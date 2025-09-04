@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconciliation Assistant - Product Proposal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            color: #333;
+        }
+        
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            background: white;
+            position: absolute;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Title Slide */
+        .title-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            flex-direction: column;
+        }
+        
+        .title-slide h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .title-slide .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.95;
+            margin-bottom: 60px;
+        }
+        
+        .title-slide .tagline {
+            font-size: 1.3rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 40px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Problem Slide */
+        .problem-slide {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            flex-direction: column;
+        }
+        
+        .problem-slide h2 {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 50px;
+        }
+        
+        .pain-points {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .pain-point {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .pain-point:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .pain-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .pain-point h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .pain-point p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        /* Solution Overview */
+        .solution-slide {
+            flex-direction: column;
+            background: white;
+        }
+        
+        .solution-slide h2 {
+            font-size: 3rem;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+        
+        .solution-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+        
+        .before-after {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .before-after h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .before {
+            color: #e74c3c;
+        }
+        
+        .after {
+            color: #27ae60;
+        }
+        
+        .workflow-box {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px dashed #dee2e6;
+            min-height: 250px;
+        }
+        
+        .after .workflow-box {
+            border: 2px solid #27ae60;
+            background: #f0fff4;
+        }
+        
+        .arrow {
+            font-size: 3rem;
+            color: #667eea;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* How It Works */
+        .how-it-works-slide {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+            flex-direction: column;
+        }
+        
+        .how-it-works-slide h2 {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 50px;
+        }
+        
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        
+        .step h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .step p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .step-arrow {
+            position: absolute;
+            top: 40px;
+            right: -30px;
+            font-size: 2rem;
+            color: #cbd5e0;
+        }
+        
+        /* Demo Slide */
+        .demo-slide {
+            flex-direction: column;
+            background: #f8f9fa;
+        }
+        
+        .demo-slide h2 {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 40px;
+        }
+        
+        .demo-container {
+            display: flex;
+            gap: 40px;
+            width: 100%;
+            max-width: 1400px;
+        }
+        
+        .discussion-panel {
+            flex: 2;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .event-panel {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .message {
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .message.guest {
+            background: #e3f2fd;
+            margin-left: 40px;
+        }
+        
+        .message-author {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .suggestion-chips {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .chip {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .chip:hover {
+            transform: scale(1.05);
+        }
+        
+        .chip.accept {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+        
+        .chip.ignore {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+        
+        /* Benefits Slide */
+        .benefits-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex-direction: column;
+        }
+        
+        .benefits-slide h2 {
+            font-size: 3.5rem;
+            margin-bottom: 60px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .benefit {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .benefit-icon {
+            font-size: 3rem;
+        }
+        
+        .benefit-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-content p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* Roadmap Slide */
+        .roadmap-slide {
+            flex-direction: column;
+            background: white;
+        }
+        
+        .roadmap-slide h2 {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 50px;
+        }
+        
+        .timeline {
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+        
+        .timeline-date {
+            min-width: 150px;
+            text-align: right;
+            padding-right: 30px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .timeline-content.future {
+            opacity: 0.6;
+            border-left-style: dashed;
+        }
+        
+        .timeline-content h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-content ul {
+            color: #7f8c8d;
+            margin-left: 20px;
+        }
+        
+        /* CTA Slide */
+        .cta-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            flex-direction: column;
+        }
+        
+        .cta-slide h2 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+        }
+        
+        .cta-slide p {
+            font-size: 1.5rem;
+            margin-bottom: 50px;
+            opacity: 0.95;
+        }
+        
+        .cta-button {
+            background: white;
+            color: #667eea;
+            padding: 20px 60px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: none;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Navigation */
+        .nav-controls {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #667eea;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .nav-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        
+        .slide-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            background: white;
+            width: 30px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide active">
+            <h1>Reconciliation Assistant</h1>
+            <p class="subtitle">Transform Email Chaos into Structured Data</p>
+            <p class="tagline">🎯 Never Miss Another Guest Update</p>
+        </div>
+        
+        <!-- Slide 2: The Problem -->
+        <div class="slide problem-slide">
+            <h2>"We're drowning in email updates"</h2>
+            <p style="font-size: 1.4rem; color: #7f8c8d; margin-bottom: 50px; font-style: italic;">Event managers juggle hundreds of guest communications daily</p>
+            <div class="pain-points">
+                <div class="pain-point">
+                    <div class="pain-icon">💔</div>
+                    <h3>Guest Disappointment</h3>
+                    <p>"We confirmed 75 guests in email, why is the room set for 50?" - Critical updates get lost in discussion threads</p>
+                </div>
+                <div class="pain-point">
+                    <div class="pain-icon">😰</div>
+                    <h3>EM Stress</h3>
+                    <p>Event managers fear missing details buried in long email chains, leading to last-minute scrambles and client frustration</p>
+                </div>
+                <div class="pain-point">
+                    <div class="pain-icon">💸</div>
+                    <h3>Revenue Impact</h3>
+                    <p>Contract-event misalignment costs venues through over/under-preparation and strained client relationships</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Solution Overview -->
+        <div class="slide solution-slide">
+            <h2>What if emails could update events automatically?</h2>
+            <p style="font-size: 1.4rem; color: #7f8c8d; margin-bottom: 40px;">Smart reconciliation transforms chaos into clarity</p>
+            <div class="solution-visual">
+                <div class="before-after before">
+                    <h3>Before</h3>
+                    <div class="workflow-box">
+                        <p>📧 Read email</p>
+                        <p>📋 Switch to event details</p>
+                        <p>✏️ Manually update fields</p>
+                        <p>🔄 Repeat for every change</p>
+                        <p>😰 Hope nothing was missed</p>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="before-after after">
+                    <h3>After</h3>
+                    <div class="workflow-box">
+                        <p>📧 Read email</p>
+                        <p>✨ See smart suggestions</p>
+                        <p>✅ One-click accept</p>
+                        <p>🎯 100% accuracy</p>
+                        <p>😊 Peace of mind</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: How It Works -->
+        <div class="slide how-it-works-slide">
+            <h2>Simple. Powerful. In Control.</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Guest Sends Update</h3>
+                    <p>"Let's change to 75 guests and switch to the vegetarian menu"</p>
+                    <div class="step-arrow">→</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Smart Detection</h3>
+                    <p>Rules-based and AI algorithms identify: Guest Count: 75, Menu: Vegetarian</p>
+                    <div class="step-arrow">→</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>EM Reviews</h3>
+                    <p>Event managers accept, edit, or ignore suggestions with full control</p>
+                    <div class="step-arrow">→</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Auto-Update</h3>
+                    <p>Event record updated, contract flagged if needed</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Live Demo -->
+        <div class="slide demo-slide">
+            <h2>See It In Action</h2>
+            <div class="demo-container">
+                <div class="discussion-panel">
+                    <h3 style="margin-bottom: 20px;">Discussion Thread</h3>
+                    <div class="message">
+                        <div class="message-author">Sarah (EM)</div>
+                        <p>Hi Jessica! Confirming your event for next Saturday.</p>
+                    </div>
+                    <div class="message guest">
+                        <div class="message-author">Jessica (Guest)</div>
+                        <p>Great! Actually, we're now expecting 75 guests instead of 60. Also, can we switch to the vegetarian menu option?</p>
+                        <div class="suggestion-chips">
+                            <span class="chip accept">✓ Accept: Guest Count → 75</span>
+                            <span class="chip accept">✓ Accept: Menu → Vegetarian</span>
+                            <span class="chip ignore">✗ Ignore</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-panel">
+                    <h3 style="margin-bottom: 20px;">Event Summary</h3>
+                    <p><strong>Guest Count:</strong> <span style="color: #e74c3c; text-decoration: line-through;">60</span> → <span style="color: #27ae60;">75</span></p>
+                    <p><strong>Menu:</strong> <span style="color: #e74c3c; text-decoration: line-through;">Standard</span> → <span style="color: #27ae60;">Vegetarian</span></p>
+                    <p><strong>Start Time:</strong> 6:00 PM</p>
+                    <p><strong>Linens:</strong> White</p>
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                        <strong>⚠️ Contract Update Required</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Benefits -->
+        <div class="slide benefits-slide">
+            <h2>Transform Your Operations</h2>
+            <div class="benefits-grid">
+                <div class="benefit">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-content">
+                        <h3>80% Faster Updates</h3>
+                        <p>Reduces EM update time from 5 minutes to 30 seconds per change</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-content">
+                        <h3>Zero Missed Details</h3>
+                        <p>Smart detection catches what manual review might miss</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">😊</div>
+                    <div class="benefit-content">
+                        <h3>Happier Teams</h3>
+                        <p>Reduces clerical burden, enables more strategic guest interaction</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-content">
+                        <h3>Reduced Errors</h3>
+                        <p>Avoid costly last-minute surprises</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 7: Roadmap -->
+        <div class="slide roadmap-slide">
+            <h2>Implementation Roadmap</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Phase 1 - Now</div>
+                    <div class="timeline-content">
+                        <h3>Prototype Launch</h3>
+                        <ul>
+                            <li>Core fields: guest count, menu, time, linens</li>
+                            <li>Rule-based detection</li>
+                            <li>Manual accept/ignore workflow</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Phase 2 - Q2</div>
+                    <div class="timeline-content future">
+                        <h3>AI Enhancement</h3>
+                        <ul>
+                            <li>GPT-powered natural language processing</li>
+                            <li>Expanded field coverage</li>
+                            <li>Confidence scoring</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Phase 3 - Q3</div>
+                    <div class="timeline-content future">
+                        <h3>Full Integration</h3>
+                        <ul>
+                            <li>Contract auto-regeneration</li>
+                            <li>Guest portal integration</li>
+                            <li>Custom venue dictionaries</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Call to Action -->
+        <div class="slide cta-slide">
+            <h2>Ready to Transform?</h2>
+            <p>Join the future of event management</p>
+            <button class="cta-button">Start Pilot Program</button>
+        </div>
+        
+        <!-- Navigation Controls -->
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="previousSlide()">‹</button>
+            <button class="nav-btn" onclick="nextSlide()">›</button>
+        </div>
+        
+        <!-- Slide Indicators -->
+        <div class="slide-indicator">
+            <span class="dot active" onclick="goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+            <span class="dot" onclick="goToSlide(3)"></span>
+            <span class="dot" onclick="goToSlide(4)"></span>
+            <span class="dot" onclick="goToSlide(5)"></span>
+            <span class="dot" onclick="goToSlide(6)"></span>
+            <span class="dot" onclick="goToSlide(7)"></span>
+        </div>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            currentSlide = (n + slides.length) % slides.length;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+        
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+        
+        function goToSlide(n) {
+            showSlide(n);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+            if (e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+    </script>
+</body>
+</html>

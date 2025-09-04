@@ -85,7 +85,13 @@ export function parseMessages(discussions: Discussion[], ignoredSuggestions: Ign
         
         if (isIgnored) return;
 
-        const matches = message.body.matchAll(new RegExp(pattern.pattern, 'gi'));
+        const regex = new RegExp(pattern.pattern, 'gi');
+        let match;
+        const matches = [];
+        
+        while ((match = regex.exec(message.body)) !== null) {
+          matches.push(match);
+        }
         
         for (const match of matches) {
           const extractedValue = pattern.extractor(match);

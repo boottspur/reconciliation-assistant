@@ -10,18 +10,26 @@
     },
     {
       "src": "^/reconciliation-assistant/?$",
+      "dest": "/hub.html"
+    },
+    {
+      "src": "^/reconciliation-assistant/demo/?$",
       "dest": "/index.html"
     },
     {
-      "src": "^/reconciliation-assistant/static/(.*)",
+      "src": "^/reconciliation-assistant/demo/static/(.*)",
       "dest": "/static/$1"
     },
     {
-      "src": "^/reconciliation-assistant/(.*)",
+      "src": "^/reconciliation-assistant/demo/(.*)",
       "dest": "/$1"
     },
     {
-      "src": "^/(?!reconciliation-assistant).*$",
+      "src": "^/reconciliation-presentation\\.html$",
+      "dest": "/reconciliation-presentation.html"
+    },
+    {
+      "src": "^/(?!reconciliation-assistant|reconciliation-presentation).*$",
       "status": 404
     }
   ]

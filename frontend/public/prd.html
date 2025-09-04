@@ -165,26 +165,26 @@
     <div class="container">
         <div class="header">
             <h1>PRD: Reconciliation Assistant Prototype</h1>
-            <p class="subtitle">AI-powered extraction of event updates from discussion threads</p>
+            <p class="subtitle">Automated extraction of event updates from discussion threads</p>
         </div>
 
         <h2>Overview</h2>
         <p>Event Managers (EMs) frequently negotiate event details with guests via Tripleseat's Discussions (email-synced threads). Critical details like guest count, menu selections, linen colors, and timing often remain buried in free-form text. EMs must manually copy these into structured event fields, creating risk of errors, contract drift, and operational confusion.</p>
         
-        <p>This prototype introduces a Reconciliation Assistant inside Discussions. It scans messages, surfaces potential updates, and allows EMs to <strong>accept</strong>, <strong>discard</strong>, or <strong>add to tasks</strong>. The AI interactions are mocked/deterministic, but the workflow and UI demonstrate the full user experience.</p>
+        <p>This prototype introduces a Reconciliation Assistant inside Discussions. It scans messages using rules-based parsing, surfaces potential updates, and allows EMs to <strong>accept</strong>, <strong>discard</strong>, or <strong>add to tasks</strong>. The current implementation uses regex-based extraction that can be enhanced with AI capabilities in future phases where the value justifies the cost.</p>
 
         <h2>Goals</h2>
         <ul>
             <li>Reduce errors from missed updates in guest communication</li>
             <li>Save EMs time by surfacing structured suggestions with confidence scores</li>
-            <li>Provide a workflow that can later support AI-powered parsing without architectural redesign</li>
+            <li>Provide a workflow that supports both rules-based and future AI-enhanced parsing without architectural redesign</li>
             <li>Demonstrate three-action workflow: Accept, Discard, Add to Tasks</li>
         </ul>
 
         <h2>Non-Goals</h2>
         <ul>
-            <li>Real AI/NLP integration (mocked with regex parsing)</li>
-            <li>Full event schema coverage (focused on 4 key fields)</li>
+            <li>Advanced AI/NLP integration (current implementation uses effective regex parsing)</li>
+            <li>Full event schema coverage (focused on 4 key fields to prove concept)</li>
             <li>Contract regeneration flows (flagged only)</li>
             <li>Production-ready scalability</li>
         </ul>
@@ -225,10 +225,11 @@
         <h3>Backend (Node.js + Express)</h3>
         <ul>
             <li>Message ingestion: Store discussions as message objects (id, author, timestamp, body, isGuest)</li>
-            <li>Reconciliation engine: Regex-based parser for supported fields</li>
+            <li>Extraction engine: Rules-based regex parser for supported fields with high accuracy</li>
             <li>Returns suggestions array: {id, field, value, confidence, messageId, originalText}</li>
             <li>Confidence scores: 0.85-0.95 based on pattern strength and context</li>
             <li>In-memory event store with real-time updates</li>
+            <li>Architecture ready for AI enhancement layers in future phases</li>
         </ul>
 
         <h3>Frontend (React + TypeScript + Material-UI)</h3>
@@ -240,13 +241,15 @@
             <li>Demo mode with automated scenario walkthrough</li>
         </ul>
 
-        <h2>Parsing Logic (Implemented)</h2>
+        <h2>Rules-Based Parsing Logic (Implemented)</h2>
         <div class="code-block">
 Guest count: /(\d{1,3})\s*(more\s*)?(guests?|people|attendees|RSVP)/i
 Start time: /(\d{1,2}):?(\d{2})?\s*(am|pm)/i  
 Menu: /(buffet\s*[a-c]|vegetarian|plated)/i
 Linens: /(red|blue|green|white|black|purple|gold|silver)\s*(linens?|napkins?)/i
         </div>
+        
+        <p>These regex patterns provide high accuracy for common event terminology while maintaining simple, maintainable logic. Future AI enhancement can layer on top of this foundation for edge cases and complex language patterns.</p>
 
         <h3>Example Output</h3>
         <div class="example">
@@ -331,13 +334,13 @@ Linens: /(red|blue|green|white|black|purple|gold|silver)\s*(linens?|napkins?)/i
 
         <h2>Future Extensions</h2>
         <ul>
-            <li>Expand field coverage (AV equipment, décor, room setup)</li>
-            <li>True AI/NLP extraction with GPT-4 or Claude integration</li>
+            <li>Expand field coverage (AV equipment, décor, room setup) with additional regex patterns</li>
+            <li>AI/NLP enhancement layer for complex language patterns where rules-based parsing falls short</li>
             <li>Integration with contract regeneration workflow</li>
-            <li>Venue-specific dictionaries for custom items</li>
+            <li>Venue-specific dictionaries for custom items and terminology</li>
             <li>Guest Portal "Request Change" → Discussion → reconciliation flow</li>
             <li>Bulk suggestion management and approval workflows</li>
-            <li>Analytics dashboard for suggestion acceptance rates</li>
+            <li>Analytics dashboard for suggestion acceptance rates and pattern effectiveness</li>
         </ul>
 
         <h2>Technology Stack</h2>

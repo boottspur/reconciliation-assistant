@@ -40,6 +40,12 @@ export interface Event {
   };
 }
 
+export interface IgnoredSuggestion {
+  field: string;
+  eventId: string;
+  discussionId: string;
+}
+
 export interface ReconciliationData {
   event: Event;
   discussions: Discussion[];
